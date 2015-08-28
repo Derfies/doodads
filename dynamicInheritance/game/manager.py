@@ -10,12 +10,6 @@ class Manager( object ):
     def __init__( self, *args, **kwargs ):
         self.nodeWrprs = {}
 
-        self.build()
-
-        #print inspect.getmembers( nodes, inspect.isclass )
-        #print dir( nodes )
-        #print getattr( nodes, 'nodeA' )
-
     def getBaseClasses( self, mod ):
         """Get list of classes."""
         clsMap = {}
@@ -29,31 +23,25 @@ class Manager( object ):
 
         return clsMap
 
-    def build( self ):
+    def addNodeWrapper( self, clsName, mro, methods ):
+        cls = type( clsName, tuple( mro ), methods )
+        self.nodeWrprs[clsName] = cls
 
+    def build( self ):
         clsMap = self.getBaseClasses( nodes )
         
         # Compile classes.
-        for clsName, cls in clsMap.items():
-            base = cls
-            mro = [base]
-            methods = {}
-            while hasattr( base, 'inherits' ):
-                base = clsMap[getattr( base, 'inherits' )[0]]       # TODO: Support multiple inheritance.
-                mro.append( base )
-                methods.update( {
-                    k: v
-                    for k, v in base.__dict__.items()
-                    if isinstance( v, types.FunctionType )
-                } )
+        for clsName in sorted( clsMap.keys() ):
+            bases = []
+            baseName = clsName
+            while True:
+                bases.append( clsMap[baseName] )
 
-            print 'MAKE CLASS:', clsName
-            print 'mro:', mro
-            print 'meth', methods
-            cls = type( clsName, tuple( mro ), {'doSomething': mro[0].doSomething} )
-            self.nodeWrprs[clsName] = cls
-            obj = cls()
-            obj.doSomething()
+                if not hasattr( clsMap[baseName], 'inherits' ):
+                    break
+                baseName = getattr( clsMap[baseName], 'inherits' )[0]
+
+            self.addNodeWrapper( clsName, bases, {} )
 
 
 if __name__ == '__main__':

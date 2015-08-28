@@ -1,15 +1,10 @@
 class NodeC( object ):
 
-    inherits = ['NodeB']
-
     def __init__( self ):
         super( NodeC, self ).__init__()
-        print 'NodeC init'
+        print 'NodeC EDITOR init'
 
     def doSomething( self ):
         super( NodeC, self ).doSomething()
 
-        print 'NodeC doSomething' 
-
-    def doSomething2( self ):
-        print 'NodeC do something else' 
+        print 'NodeC EDITOR doSomething' 
