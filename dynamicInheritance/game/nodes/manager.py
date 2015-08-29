@@ -1,8 +1,4 @@
-import sys
 import types
-import inspect
-
-import nodes
 
 
 class Manager( object ):
@@ -27,8 +23,8 @@ class Manager( object ):
         cls = type( clsName, tuple( mro ), methods )
         self.nodeWrprs[clsName] = cls
 
-    def build( self ):
-        clsMap = self.getBaseClasses( nodes )
+    def build( self, mod ):
+        clsMap = self.getBaseClasses( mod )
         
         # Compile classes.
         for clsName in sorted( clsMap.keys() ):
@@ -46,3 +42,4 @@ class Manager( object ):
 
 if __name__ == '__main__':
     nm = Manager()
+    nm.getBaseClasses( None )

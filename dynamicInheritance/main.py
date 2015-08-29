@@ -3,12 +3,12 @@ import editor
 
 
 if __name__ == '__main__':
-    nm = editor.Manager()
-    nm.build()
 
-    nm.nodeWrprs['NodeC']()
-    print '*****'
-    nm = game.Manager()
-    nm.build()
-
-    nm.nodeWrprs['NodeC']()
+    gm = game.Base()
+    gm.nodeMgr.build( game.nodes )
+    gm.nodeMgr.nodeWrprs['NodeC']()
+    
+    ed = editor.Base()
+    ed.nodeMgr.build( game.nodes, editor.nodes )
+    ed.nodeMgr.nodeWrprs['NodeC']()
+    
